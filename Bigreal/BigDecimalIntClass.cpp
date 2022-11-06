@@ -147,9 +147,9 @@ string addition(string num1,string num2)
     auto it2 = num2.rbegin();
     string res = "";
     int carry = 0;
+    int twoDigitsSum;
     while (it1 != num1.rend())
     {
-        int twoDigitsSum;
         carry = 0;
         twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
         if (twoDigitsSum >= 10)
