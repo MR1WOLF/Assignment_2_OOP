@@ -16,6 +16,15 @@ void removePoint(string &str1, string &str2){
     
 }
 
+int digitsAfterPoint(Bigreal num1, Bigreal num2){
+    int point1 = num1.bigreal.find('.');
+    int point2 = num2.bigreal.find('.');
+    int size1 = num1.bigreal.length() - point1;
+    int size2 = num2.bigreal.length() - point2;
+
+    return size1 - size2;
+}
+
 Bigreal::Bigreal(string realnum){
     point = realnum.find('.');
     realnum.erase(realnum.find('.'), 1);
