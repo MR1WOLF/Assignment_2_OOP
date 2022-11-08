@@ -9,7 +9,7 @@ class Bigreal{
         string bigreal;
     public:
         Bigreal(string bigreal);
-        Bigreal(double bigdouble = 0.0);
+        Bigreal(double bigdouble);
         Bigreal(BigDecimalInt biginteger);
         BigDecimalInt getNumber();
         int getPoint();
