@@ -29,5 +29,12 @@ public:
     bool checkValidInput(string input);
     void print();
     void setSign();
+    bool operator< (BigReal anotherReal);
+    bool operator> (BigReal anotherReal);
+    bool operator== (BigReal anotherReal);
+    BigReal operator= (BigReal anotherReal);
+    int size();
+    int sign();
+    friend istream& operator >> (istream& input, BigReal& b);
 };
 #endif //UNTITLED21_BIGREAL_H
