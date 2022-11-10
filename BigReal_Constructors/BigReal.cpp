@@ -7,9 +7,7 @@ using namespace std;
 
                                             // Empty constructor
 BigReal::BigReal(){
-    integer.setNumber("0");
     bigreal="0";
-    setSign();
 }
 
                                         // Default constructor
