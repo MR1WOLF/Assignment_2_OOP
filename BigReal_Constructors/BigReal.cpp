@@ -161,6 +161,183 @@ void BigReal::print(){
   cout<<sign<<endl;
 }
 
+Bigreal Bigreal::operator+ (Bigreal& other){
+    Bigreal result;
+    if (this->point == 0 && other.point == 0){
+        BigDecimalInt num1(this->bigreal);
+        BigDecimalInt num2(other.bigreal);
+
+        result.integer = num1 + num2;
+        string temp = result.integer.getNumber();
+        result.bigreal = temp;
+        return result;
+    }
+    int digits_after = abs(digitsAfterPoint(*this, other));
+    if (this->bigreal.length() > other.bigreal.length() && digits_after > 0){
+        for (int i = 0; i < digits_after; i++){
+            other.bigreal += "0";
+        }
+    }
+    else if (this->bigreal.length() < other.bigreal.length() && digits_after > 0){
+        for (int i = 0; i < digits_after; i++){
+            this->bigreal += "0";
+        }
+    }
+    else if (this->bigreal.length() == other.bigreal.length() && digits_after > 0){
+        if (digitsAfterPoint(*this, other) < 0){
+            for (int i = 0; i < digits_after; i++){
+                this->bigreal += "0";
+            }
+        }
+        else{
+            for (int i = 0; i < digits_after; i++){
+                other.bigreal += "0";
+            }
+        }
+    }
+
+    removePoint(this->bigreal, other.bigreal);
+    
+    BigDecimalInt num1(this->bigreal);
+    BigDecimalInt num2(other.bigreal);
+
+    if (num1.size() > num2.size() && num1.sign() != 0){
+        result.integer = num1 + num2;
+        result.point = this->point;
+    }
+    else if (num1.sign() == 0){
+        result.integer = num1 + num2;
+        result.point = this->point - 1;
+    }
+    else if(num2.sign() == 0){
+        result.integer = num1 + num2;
+        result.point = other.point - 1;
+    }
+    else{
+        result.integer = num1 + num2;
+        result.point = other.point;
+    }
+
+
+    if (result.integer.size() > num1.size() && num1.size() > num2.size()){
+       result.point++;
+    }
+    else if(result.integer.size() > num2.size() && num2.size() > num1.size()){
+        result.point++;
+    }
+    else if (result.integer.size() > num1.size() && num1.size() == num2.size() && num2.sign()){
+        result.point++;
+    }
+    string temp = result.integer.getNumber();
+    temp.insert(temp.begin() + result.point, '.');
+    result.bigreal = temp;
+
+    return result;
+}
+
+Bigreal Bigreal::operator-(Bigreal& other){
+    Bigreal result;
+
+    if (this->point == 0 && other.point == 0){
+        BigDecimalInt num1(this->bigreal);
+        BigDecimalInt num2(other.bigreal);
+
+        result.integer = num1 - num2;
+        string temp = result.integer.getNumber();
+        result.bigreal = temp;
+        return result;
+    }
+
+    int digits_after = abs(digitsAfterPoint(*this, other));
+    if (this->bigreal.length() > other.bigreal.length() && digits_after > 0){
+        for (int i = 0; i < digits_after; i++){
+            other.bigreal += "0";
+        }
+    }
+    else if (this->bigreal.length() < other.bigreal.length() && digits_after > 0){
+        for (int i = 0; i < digits_after; i++){
+            this->bigreal += "0";
+        }
+    }
+    else if (this->bigreal.length() == other.bigreal.length() && digits_after > 0){
+        if (digitsAfterPoint(*this, other) < 0){
+            for (int i = 0; i < digits_after; i++){
+                this->bigreal += "0";
+            }
+        }
+        else{
+            for (int i = 0; i < digits_after; i++){
+                other.bigreal += "0";
+            }
+        }
+    }
+
+    removePoint(this->bigreal, other.bigreal);
+    
+    BigDecimalInt num1(this->bigreal);
+    BigDecimalInt num2(other.bigreal);
+
+    if (num1.size() > num2.size()){
+        result.integer = num1 - num2;
+        if (num1.sign() == 0){
+            result.point = this->point - 1;
+        }
+        else{
+            result.point = this->point;
+        }
+        if (result.integer.size() < num1.size()){
+            result.point--;
+        }
+        if (result.integer.size() > num1.size()){
+            result.point++;
+        }
+        if (num1 > num2 && num1.sign() == 0){
+            cout << '-';
+        }
+        else if (num2 > num1){
+            cout << '-';
+        }
+    }
+    else if (num2.size() >= num1.size()){
+        result.integer = num1 - num2;
+        if (num2.sign() == 0){
+            result.point = other.point - 1;
+        }
+        else{
+            result.point = other.point;
+        }
+        if (result.integer.size() < num2.size()){
+            result.point--;
+        }
+        if (result.integer.size() > num2.size()){
+            result.point++;
+        }
+        if (num1 > num2 && num1.sign() == 0){
+            cout << '-';
+        }
+        else if (num2 > num1){
+            cout << '-';
+        }
+    }
+    else{
+        result.integer = num1 - num2;
+        if (num1.size() > num2.size()){
+            result.point = this->point;
+        }
+        else{
+            result.point = other.point;
+        }
+        if (result.integer.size() < num1.size()){
+            result.point--;
+        }
+    }
+
+    string temp = result.integer.getNumber();
+    temp.insert(temp.begin() + result.point, '.');
+    result.bigreal = temp;
+
+    return result;
+}
 
 
 int main() {
