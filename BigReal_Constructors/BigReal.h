@@ -26,6 +26,8 @@ public:
     BigReal (BigReal&& other);
     BigReal& operator= (BigReal& other);
     BigReal& operator= (BigReal&& other);
+    Bigreal operator+ (Bigreal& other);
+    Bigreal operator- (Bigreal& other);
     bool checkValidInput(string input);
     void print();
     void setSign();
