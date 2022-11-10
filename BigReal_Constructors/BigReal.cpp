@@ -4,16 +4,11 @@
 #include "BigReal.h"
 using namespace std;
 
-void BigReal::setSign(){
-   if(integer.sign()==0){
-       sign='-';
-   }
-   else{sign='+';}
-}
+
                                             // Empty constructor
 BigReal::BigReal(){
     integer.setNumber("0");
-    //str="0";
+    bigreal="0";
     setSign();
 }
 
@@ -22,18 +17,57 @@ BigReal::BigReal(double realnum){
     string realnumstr= to_string(realnum);
     point = realnumstr.find('.');
     realnumstr.erase(realnumstr.find('.'),1);
-    //str=realnum;
-    integer.setNumber(realnumstr);
-    setSign();
+    bigreal=realnum;
 }
 
 BigReal::BigReal(string realnum) {
     if (realnum.empty()) {
-        integer.setNumber("0");
-       // str="0";
-        setSign();
+        bigreal="0";
     }
-   
+    else {
+        if (checkValidInput(realnum)) {
+            point = realnum.find('.');
+            realnum.erase(realnum.find('.'), 1);
+            bigreal=realnum;
+
+        }
+        else { cout << "invalid input" << endl; }
+
+    }
+}
+BigReal::BigReal(BigDecimalInt bigInteger){
+    bigreal=bigInteger.getNumber();
+    point=bigreal.size();
+}
+
+BigReal::BigReal (const BigReal& other){            // copy constructor
+    bigreal=other.bigreal;
+    point=other.point;
+}
+BigReal:: BigReal (BigReal&& other){
+    point=other.point;
+    bigreal=other.bigreal;
+}
+                                                    // Assignment operator
+BigReal& BigReal :: operator = (BigReal& other)
+{
+    point = other.point;
+    bigreal=other.bigreal;
+    return *this;
+}
+BigReal& BigReal :: operator= (BigReal&& other){
+    point = other.point;
+    bigreal=other.bigreal;
+    return *this;
+}
+bool BigReal :: checkValidInput(string input)
+{
+    regex validInput("[-+]?[0-9]*[.]?[0-9]*");
+    return regex_match(input, validInput);
+}
+
+                                         
+
 bool BigReal :: operator< (BigReal anotherReal)
 {
     if (num.Sign()==0)
@@ -87,11 +121,7 @@ bool BigReal::operator==(BigReal anotherReal)
         return false ;
 
 }
- BigReal BigReal :: operator= (BigReal anotherReal)
-{
-    num=anotherReal.num;
-    return anotherReal;
-}
+
 int BigReal :: size()
 {
     return num.size();
@@ -117,42 +147,6 @@ istream &operator>>(istream &input, BigReal &b) {
         else { cout << "invalid input" << endl; }
 
     }
-}
-BigReal::BigReal(BigDecimalInt bigInteger){
-    integer=bigInteger;
-    point=integer.size();
-    setSign();
-}
-
-BigReal::BigReal (const BigReal& other){            // copy constructor
-
-    integer=other.integer;
-    point=other.point;
-    setSign();
-}
-BigReal:: BigReal (BigReal&& other){
-    integer=other.integer;
-    point=other.point;
-    setSign();
-}
-                                                    // Assignment operator
-BigReal& BigReal :: operator = (BigReal& other)
-{
-    point = other.point;
-    integer = other.integer;
-    setSign();
-    return *this;
-}
-BigReal& BigReal :: operator= (BigReal&& other){
-    point = other.point;
-    integer = other.integer;
-    setSign();
-    return *this;
-}
-bool BigReal :: checkValidInput(string input)
-{
-    regex validInput("[-+]?[0-9]*[.]?[0-9]*");
-    return regex_match(input, validInput);
 }
 
 void BigReal::print(){
