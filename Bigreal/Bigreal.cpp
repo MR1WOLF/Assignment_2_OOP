@@ -52,7 +52,15 @@ int Bigreal::getPoint(){
 
 Bigreal Bigreal::operator+ (Bigreal& other){
     Bigreal result;
+    if (this->point == 0 && other.point == 0){
+        BigDecimalInt num1(this->bigreal);
+        BigDecimalInt num2(other.bigreal);
 
+        result.integer = num1 + num2;
+        string temp = result.integer.getNumber();
+        result.bigreal = temp;
+        return result;
+    }
     int digits_after = abs(digitsAfterPoint(*this, other));
     if (this->bigreal.length() > other.bigreal.length() && digits_after > 0){
         for (int i = 0; i < digits_after; i++){
@@ -82,14 +90,23 @@ Bigreal Bigreal::operator+ (Bigreal& other){
     BigDecimalInt num1(this->bigreal);
     BigDecimalInt num2(other.bigreal);
 
-    if (num1.size() > num2.size()){
+    if (num1.size() > num2.size() && num1.sign() != 0){
         result.integer = num1 + num2;
         result.point = this->point;
+    }
+    else if (num1.sign() == 0){
+        result.integer = num1 + num2;
+        result.point = this->point - 1;
+    }
+    else if(num2.sign() == 0){
+        result.integer = num1 + num2;
+        result.point = other.point - 1;
     }
     else{
         result.integer = num1 + num2;
         result.point = other.point;
     }
+
 
     if (result.integer.size() > num1.size() && num1.size() > num2.size()){
        result.point++;
@@ -97,7 +114,7 @@ Bigreal Bigreal::operator+ (Bigreal& other){
     else if(result.integer.size() > num2.size() && num2.size() > num1.size()){
         result.point++;
     }
-    else if (result.integer.size() > num1.size() && num1.size() == num2.size()){
+    else if (result.integer.size() > num1.size() && num1.size() == num2.size() && num2.sign()){
         result.point++;
     }
     string temp = result.integer.getNumber();
@@ -109,6 +126,16 @@ Bigreal Bigreal::operator+ (Bigreal& other){
 
 Bigreal Bigreal::operator-(Bigreal& other){
     Bigreal result;
+
+    if (this->point == 0 && other.point == 0){
+        BigDecimalInt num1(this->bigreal);
+        BigDecimalInt num2(other.bigreal);
+
+        result.integer = num1 - num2;
+        string temp = result.integer.getNumber();
+        result.bigreal = temp;
+        return result;
+    }
 
     int digits_after = abs(digitsAfterPoint(*this, other));
     if (this->bigreal.length() > other.bigreal.length() && digits_after > 0){
@@ -141,20 +168,29 @@ Bigreal Bigreal::operator-(Bigreal& other){
 
     if (num1.size() > num2.size()){
         result.integer = num1 - num2;
-        if (num1.size() > num2.size()){
-            result.point = this->point;
+        if (num1.sign() == 0){
+            result.point = this->point - 1;
         }
         else{
-            result.point = other.point;
+            result.point = this->point;
         }
-        if (num1.size() < num2.size()){
+        if (result.integer.size() < num1.size()){
             result.point--;
         }
+        if (result.integer.size() > num1.size()){
+            result.point++;
+        }
+        if (num1 > num2 && num1.sign() == 0){
+            cout << '-';
+        }
+        else if (num2 > num1){
+            cout << '-';
+        }
     }
-    else if (num2.size() >= num1.size() && num2 > num1){
-        result.integer = num2 - num1;
-        if (num1.size() > num2.size()){
-            result.point = this->point;
+    else if (num2.size() >= num1.size()){
+        result.integer = num1 - num2;
+        if (num2.sign() == 0){
+            result.point = other.point - 1;
         }
         else{
             result.point = other.point;
@@ -162,7 +198,15 @@ Bigreal Bigreal::operator-(Bigreal& other){
         if (result.integer.size() < num2.size()){
             result.point--;
         }
-        cout << '-';
+        if (result.integer.size() > num2.size()){
+            result.point++;
+        }
+        if (num1 > num2 && num1.sign() == 0){
+            cout << '-';
+        }
+        else if (num2 > num1){
+            cout << '-';
+        }
     }
     else{
         result.integer = num1 - num2;
@@ -183,7 +227,6 @@ Bigreal Bigreal::operator-(Bigreal& other){
 
     return result;
 }
-
 
 Bigreal Bigreal::operator= (Bigreal other){
     this->integer = other.integer;
