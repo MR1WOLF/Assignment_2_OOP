@@ -33,6 +33,79 @@ BigReal::BigReal(string realnum) {
        // str="0";
         setSign();
     }
+   
+bool BigReal :: operator< (BigReal anotherReal)
+{
+    if (num.Sign()==0)
+    {
+        if (point >= anotherReal.point &&num > anotherReal.num  )
+            return false;
+        if (point < anotherReal.point &&num == anotherReal.num  )
+            return false ;
+        else
+            return true;
+    }
+    else if (num.Sign()==1)
+    {
+        if (point >= anotherReal.point &&num > anotherReal.num  )
+            return false;
+        if (point > anotherReal.point &&num == anotherReal.num  )
+            return false ;
+        else
+            return true;
+
+    }
+};
+bool BigReal :: operator> (BigReal anotherReal)
+{
+    if (num.Sign()==0)
+    {
+        if (point >= anotherReal.point &&num > anotherReal.num  )
+            return true;
+        if (point < anotherReal.point &&num == anotherReal.num  )
+            return true ;
+        else
+            return false;
+    }
+    else if (num.Sign()==1)
+    {
+        if (point >= anotherReal.point &&num > anotherReal.num  )
+            return true;
+        if (point > anotherReal.point &&num == anotherReal.num  )
+            return true ;
+        else
+            return false;
+    }
+}
+bool BigReal::operator==(BigReal anotherReal)
+{
+    if (point==anotherReal.point&&num==anotherReal.num)
+    {
+        return true ;
+    }
+    else
+        return false ;
+
+}
+ BigReal BigReal :: operator= (BigReal anotherReal)
+{
+    num=anotherReal.num;
+    return anotherReal;
+}
+int BigReal :: size()
+{
+    return num.size();
+}
+int BigReal :: sign()
+{
+    return num.Sign();
+}
+
+istream &operator>>(istream &input, BigReal &b) {
+    input  >> b.num1;
+    return input;
+}
+
     else {
         if (checkValidInput(realnum)) {
             point = realnum.find('.');
